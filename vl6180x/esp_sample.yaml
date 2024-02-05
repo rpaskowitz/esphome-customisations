@@ -16,11 +16,13 @@ sensor:
     lambda: |-
       auto vl6180x_sensor = new VL6180XSensor();
       App.register_component(vl6180x_sensor);
-      return {vl6180x_sensor->distance_sensor, vl6180x_sensor->luminance_sensor};
+      return {vl6180x_sensor->distance_sensor};
     sensors:
       - name: "Distance"
         unit_of_measurement: mm
         accuracy_decimals: 0
-      - name: "Luminance"
-        unit_of_measurement: lux
-        accuracy_decimals: 1
+        filters:
+          sliding_window_moving_average:
+            window_size: 10
+            send_every: 5
+            send_first_at: 1
